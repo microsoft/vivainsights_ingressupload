@@ -1,4 +1,4 @@
-﻿using DescriptiveDataUploadApp;
+using DescriptiveDataUploadApp;
 using Microsoft.Identity.Client;
 using System.Net;
 using System.Net.Http.Headers;
@@ -13,6 +13,7 @@ namespace HttpClientCallerApp
         private string pathToZippedFile = string.Empty;
         private string tenantId = string.Empty;
         private string certName = string.Empty;
+        private string novaScaleUnit = string.Empty;
 
         static void Main()
         {
@@ -25,23 +26,26 @@ namespace HttpClientCallerApp
             var emptyInput = true;
             while (emptyInput)
             {
-                Console.WriteLine("AppId/ClientId:");
+                Console.WriteLine("AppId/Client ID:");
                 appId = Console.ReadLine() ?? appId;
 
                 Console.WriteLine("\nPlease enter the absolute path to the zipped file you wish to upload.\nFor example: \"C:\\\\Users\\\\JaneDoe\\\\OneDrive - Microsoft\\\\Desktop\\\\info.zip\"");
                 pathToZippedFile = Console.ReadLine() ?? pathToZippedFile;
 
-                Console.WriteLine("\nAzure Active Directory (AAD) TenantId:");
+                Console.WriteLine("\nAzure Active Directory (AAD) Tenant ID:");
                 tenantId = Console.ReadLine() ?? tenantId;
 
                 Console.WriteLine("\nCertificate name for your registered application:");
                 certName = Console.ReadLine() ?? certName;
 
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty)
+                Console.WriteLine("\nScale unit associated with the AAD Tenant ID:");
+                novaScaleUnit = Console.ReadLine() ?? novaScaleUnit;
+
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || novaScaleUnit == string.Empty)
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
-                } 
+                }
                 else if (!IsGuid(appId) || !IsGuid(tenantId))
                 {
                     Console.WriteLine("\nThe appId and/or the tenantId is not a valid Guid.\nPlease go through the process again to upload your file.\n");
@@ -52,10 +56,10 @@ namespace HttpClientCallerApp
                     emptyInput = false;
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, novaScaleUnit).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string novaScaleUnit)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -64,7 +68,7 @@ namespace HttpClientCallerApp
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("x-nova-scaleunit", Constants.NovaScaleUnit);
+            client.DefaultRequestHeaders.Add("x-nova-scaleunit", novaScaleUnit);
 
             var form = new MultipartFormDataContent();
             var byteArray = File.ReadAllBytes(pathToZippedFile);
@@ -75,7 +79,7 @@ namespace HttpClientCallerApp
             {
                 HttpResponseMessage message = await client.PostAsync(apiToAccess, form);
 
-                if(message.StatusCode == HttpStatusCode.OK)
+                if (message.StatusCode == HttpStatusCode.OK)
                 {
                     string responseBody = await message.Content.ReadAsStringAsync();
                     Console.WriteLine($"\nRequest Status was success.\nIngestion is in progress. To check status, please visit the site.\n\nHere is the returned content:\n {responseBody})");
@@ -145,7 +149,7 @@ namespace HttpClientCallerApp
                     throw new InvalidOperationException($"\nFailed to load the certificate with find name {certificateName}");
                 }
 
-                return localCert != null? localCert : currentCert;
+                return localCert != null ? localCert : currentCert;
             }
             catch (Exception ex)
             {
