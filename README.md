@@ -13,9 +13,15 @@ Follow these steps to set up your console application:
 
 #### __Note__: None of the values require quotation marks ("") around them.
 
-1. First you will be asked for a client ID or app ID. This can be found in the registered app information on the Azure portal under ```Application (client) ID```.
-2. Second you will be expected to enter the path to the zipped file. The format of the path expected is:
+1. First, you will be asked for a client ID or app ID. This can be found in the registered app information on the Azure portal under ```Application (client) ID```.
+   If you are yet to create and register an app, follow this:
+
+    1. In the Azure portal, go to Azure Active Directory.
+    2. In the side bar, click on 'App registrations'.
+    3. Click on "+ New registration" on the top. Type in a name for the app and click 'Register'.
+    4. You should be able to grab the client/app ID from the overview page.
+2. Second, you will be expected to enter the path to the zipped file. The format of the path expected is:
  ```C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip```
-3. Third, you will be expected to enter the Azure Active Directory tenant ID, which on Azure portal will appear as ```Directory (tenant) ID```.
+3. Third, you will be expected to enter the Azure Active Directory tenant ID, which on app's overview page will appear as ```Directory (tenant) ID```.
 4. Lastly, you will need to enter the Certificate Name that is configured in your registered application.
-5. Temporarily, we will be requiring the scale unit to be entered but this will be discontinued shortly.
+5. Temporarily, we will be requiring the scale unit to be entered but this will be discontinued shortly. For the purpose of this project, you may input ```novaprdwus2-02```. 
