@@ -73,7 +73,7 @@ namespace HttpClientCallerApp
             var form = new MultipartFormDataContent();
             var byteArray = File.ReadAllBytes(pathToZippedFile);
             form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
-            var apiToAccess = @"https://novappe.microsoft.com/v1.0/scopes/" + tenantId + "/ingress/connectors/HR/ingestions/fileIngestion";
+            var apiToAccess = @"https://api.orginsights.viva.office.com/v1.0/scopes/" + tenantId + "/ingress/connectors/HR/ingestions/fileIngestion";
 
             try
             {
