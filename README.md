@@ -2,7 +2,7 @@
 
 Follow these steps to set up your console application:
 1. Clone the app. Click on the green 'Clone' button on the top right. You can choose open with Visual Studio.
-2. Create a new folder & select it for the clone to reside in, when Visual Studio prompts.
+2. Create a new folder & select it for the clone to reside in when Visual Studio prompts.
 3. If Visual Studio was open, close it. Open/re-open Visual Studio as ***admin***.
 4. On the right, click 'Open a local folder'. Choose the cloned folder.
 5. At the top of Visual Studio, you will need to select a start up project. Select ```DescriptiveDataUploadApp.csproj```.
