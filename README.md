@@ -23,7 +23,8 @@ Follow these steps to set up your console application:
  ```C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip```
 3. Third, you will be expected to enter the Azure Active Directory tenant ID, which on app's overview page will appear as ```Directory (tenant) ID```.
 4. Lastly, you will need to enter the Certificate Name that is configured in your registered application. Follow the steps here: ```https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate```
-$certname = "{certificateName}"    ## Replace {certificateName}
-$cert = New-SelfSignedCertificate -Subject "CN=$certname" -CertStoreLocation "Cert:\CurrentUser\My" -KeyExportPolicy Exportable -KeySpec Signature -KeyLength 2048 -KeyAlgorithm RSA -HashAlgorithm SHA256
-Export-Certificate -Cert $cert -FilePath "C:\Users\admin\Desktop\$certname.cer"   ## Specify your preferred location
+
+```$certname = "{certificateName}"    ## Replace {certificateName}```
+```$cert = New-SelfSignedCertificate -Subject "CN=$certname" -CertStoreLocation "Cert:\CurrentUser\My" -KeyExportPolicy Exportable -KeySpec Signature -KeyLength 2048 -KeyAlgorithm RSA -HashAlgorithm SHA256```
+```Export-Certificate -Cert $cert -FilePath "C:\Users\admin\Desktop\$certname.cer"   ## Specify your preferred location```
 
