@@ -4,9 +4,11 @@ Follow these steps to set up your console application:
 1. First, clone the app. To do this, open command prompt and enter: ```git clone https://github.com/nikita-msft/Descriptive-Data-Upload-App.git```.
 2. If Visual Studio was open, close it. Open/re-open Visual Studio as ***admin***.
 3. On the right, click 'Open a local folder'. Choose the cloned folder. Note that the cloned folder will reside in whichever directory you ran the ```git clone``` command from.
-4. At the top of Visual Studio, you will need to select a start up project. Select ```DescriptiveDataUploadApp.csproj```.
-5. Click the play button to 'Run' the app. Or, press Ctrl + F5.
-6. A console should pop up asking you for inputs.
+4. On the right, in the 'Solution Explorer' tab, double-click the .sln file. ![image](https://user-images.githubusercontent.com/104855063/226287813-4df8c428-19bb-4f95-b116-e585db82a171.png)
+
+5. At the top of Visual Studio, you will need to select a start up project. Select ```DescriptiveDataUploadApp.csproj```.
+6. Click the play button to 'Run' the app. Or, press Ctrl + F5.
+7. A console should pop up asking you for inputs.
 
 # Values to enter in the console:
 
