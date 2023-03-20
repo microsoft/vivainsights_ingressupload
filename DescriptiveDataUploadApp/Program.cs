@@ -13,7 +13,6 @@ namespace HttpClientCallerApp
         private string pathToZippedFile = string.Empty;
         private string tenantId = string.Empty;
         private string certName = string.Empty;
-        private string novaScaleUnit = string.Empty;
 
         static void Main()
         {
@@ -38,10 +37,7 @@ namespace HttpClientCallerApp
                 Console.WriteLine("\nCertificate name for your registered application:");
                 certName = Console.ReadLine() ?? certName;
 
-                Console.WriteLine("\nScale unit associated with the AAD Tenant ID:");
-                novaScaleUnit = Console.ReadLine() ?? novaScaleUnit;
-
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || novaScaleUnit == string.Empty)
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty)
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
@@ -56,10 +52,10 @@ namespace HttpClientCallerApp
                     emptyInput = false;
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, novaScaleUnit).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string novaScaleUnit)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -68,8 +64,7 @@ namespace HttpClientCallerApp
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("x-nova-scaleunit", novaScaleUnit);
-
+            
             var form = new MultipartFormDataContent();
             var byteArray = File.ReadAllBytes(pathToZippedFile);
             form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
