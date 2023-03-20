@@ -25,10 +25,11 @@ namespace HttpClientCallerApp
             var emptyInput = true;
             while (emptyInput)
             {
+                Console.WriteLine("Please enter the following values. \nNote: no quotation marks required around the responses.\n\n");
                 Console.WriteLine("AppId/Client ID:");
                 appId = Console.ReadLine() ?? appId;
 
-                Console.WriteLine("\nPlease enter the absolute path to the zipped file you wish to upload.\nFor example: \"C:\\\\Users\\\\JaneDoe\\\\OneDrive - Microsoft\\\\Desktop\\\\info.zip\"");
+                Console.WriteLine("\nPlease enter the absolute path to the zipped file you wish to upload.\nFor example: C:\\\\Users\\\\JaneDoe\\\\OneDrive - Microsoft\\\\Desktop\\\\info.zip");
                 pathToZippedFile = Console.ReadLine() ?? pathToZippedFile;
 
                 Console.WriteLine("\nAzure Active Directory (AAD) Tenant ID:");
