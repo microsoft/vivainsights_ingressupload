@@ -1,7 +1,7 @@
 # Descriptive-Data-Uploading-App
 
 Follow these steps to set up your console application:
-1. Clone the app. Open command prompt and enter: ```git clone https://github.com/nikita-msft/Descriptive-Data-Upload-App.git```.
+1. First, clone the app. To do this, open command prompt and enter: ```git clone https://github.com/nikita-msft/Descriptive-Data-Upload-App.git```.
 2. Create a new folder & select it for the clone to reside in when Visual Studio prompts.
 3. If Visual Studio was open, close it. Open/re-open Visual Studio as ***admin***.
 4. On the right, click 'Open a local folder'. Choose the cloned folder.
