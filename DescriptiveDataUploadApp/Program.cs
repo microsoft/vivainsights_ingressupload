@@ -70,7 +70,7 @@ namespace HttpClientCallerApp
             form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
             var apiToAccess = string.Format(
                 "{0}/{1}/ingress/connectors/HR/ingestions/fileIngestion",
-                Constants.NovaPpeApi,
+                Constants.NovaPrdApi,
                 tenantId);
 
             try
