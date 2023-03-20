@@ -68,7 +68,10 @@ namespace HttpClientCallerApp
             var form = new MultipartFormDataContent();
             var byteArray = File.ReadAllBytes(pathToZippedFile);
             form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
-            var apiToAccess = @"$"{Constants.NovaPrdUri}" + tenantId + "/ingress/connectors/HR/ingestions/fileIngestion";
+            var apiToAccess = string.Format(
+                "{0}/{1}/ingress/connectors/HR/ingestions/fileIngestion",
+                Constants.NovaPpeApi,
+                tenantId);
 
             try
             {
