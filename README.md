@@ -26,4 +26,6 @@ Follow these steps to set up your console application:
 2. Second, you will be expected to enter the path to the zipped file. The format of the path expected is:
  ```C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip```
 3. Third, you will be expected to enter the Azure Active Directory tenant ID, which on app's overview page will appear as ```Directory (tenant) ID```.
-4. Lastly, you will need to enter the Certificate Name that is configured in your registered application. Follow the steps in the "Create and export your public certificate" section here: ```https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate```
+4. Lastly, you will need to enter the Certificate Name that is configured in your registered application. Follow the steps in the "Create and export your public certificate" section here: ```https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate```.
+Once certificate is uploaded, you can use the value under 'Description' in the Azure Portal as the value here:
+![certExample](https://user-images.githubusercontent.com/104855063/227007691-2ec0bfa5-e0db-4802-aa64-1c6530556f34.png)
