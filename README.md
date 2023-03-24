@@ -1,7 +1,7 @@
 # Descriptive-Data-Uploading-App
 
 Follow these steps to set up your console application:
-1. First, clone the app. To do this, open command prompt and enter: ```https://github.com/microsoft/vivainsights_ingressupload.git```.
+1. First, clone the app. To do this, open command prompt and enter: ```git clone https://github.com/microsoft/vivainsights_ingressupload.git```.
 2. If Visual Studio was open, close it. Open/re-open Visual Studio as ***admin***.
 3. On the right, click 'Open a local folder'. Choose the cloned folder. Note that the cloned folder will reside in whichever directory you ran the ```git clone``` command from.
 4. On the right, in the 'Solution Explorer' tab, double-click the .sln file. 
