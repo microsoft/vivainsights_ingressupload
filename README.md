@@ -1,31 +1,31 @@
 # Descriptive-Data-Uploading-App
 
-Follow these steps to set up your console application:
-1. First, clone the app. To do this, open command prompt and enter: ```git clone https://github.com/microsoft/vivainsights_ingressupload.git```.
-2. If Visual Studio was open, close it. Open/re-open Visual Studio as ***admin***.
-3. On the right, click 'Open a local folder'. Choose the cloned folder. Note that the cloned folder will reside in whichever directory you ran the ```git clone``` command from.
-4. On the right, in the 'Solution Explorer' tab, double-click the .sln file. 
+## Set up the application
 
-![image](https://user-images.githubusercontent.com/104855063/226287813-4df8c428-19bb-4f95-b116-e585db82a171.png)
+1.	Clone the app. Open a command prompt and enter the following command: git clone https://github.com/microsoft/vivainsights_ingressupload.git.
+2.	If Visual Studio was open, close it. Open or re-open Visual Studio as an administrator.
+3.	On the right, select Open a local folder. Choose the cloned folder (vivainsights_ingressupload). 
+   **Note**: The cloned folder will live in whichever directory you ran the git clone command from.
+4.	On the right, in the **Solution Explorer** tab, double-click **DescriptiveDataUploadApp.sln**.
 
-5. At the top of Visual Studio, you will need to select a start up project. Select ```DescriptiveDataUploadApp.csproj```.
-6. Click the play button to 'Run' the app. Or, press Ctrl + F5.
-7. A console should pop up asking you for inputs.
+      <img width="350" alt="admin-upload-app-sln" src="https://user-images.githubusercontent.com/98846621/229250984-54df60e1-5249-4cd2-9f04-6272d63143a1.png">
+      
+5.	At the top of Visual Studio, you’ll need to select a start-up project. Select **DescriptiveDataUploadApp.csproj**.
 
-# Values to enter in the console:
+6.	Select the play button to run the app or press Ctrl + F5 on your keyboard. 
 
-#### __Note__: None of the values require quotation marks ("") around them.
+      <img width="500" alt="admin-upload-app-play" src="https://user-images.githubusercontent.com/98846621/229251160-49ed137a-d3d2-4dc4-9035-d8679fe0e06b.png">
 
-1. First, you will be asked for a client ID or app ID. This can be found in the registered app information on the Azure portal under ```Application (client) ID```.
-   If you are yet to create and register an app, follow this:
+## Enter values in the console
 
-    1. In the Azure portal, go to Azure Active Directory.
-    2. In the side bar, click on 'App registrations'.
-    3. Click on "+ New registration" on the top. Type in a name for the app and click 'Register'.
-    4. You should be able to grab the client/app ID from the overview page.
-2. Second, you will be expected to enter the path to the zipped file. The format of the path expected is:
- ```C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip```
-3. Third, you will be expected to enter the Azure Active Directory tenant ID, which on app's overview page will appear as ```Directory (tenant) ID```.
-4. Lastly, you will need to enter the Certificate Name that is configured in your registered application. Follow the steps in the "Create and export your public certificate" section here: ```https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate```.
-Once certificate is uploaded, you can use the value under 'Description' in the Azure Portal as the value here:
-![certExample](https://user-images.githubusercontent.com/104855063/227007691-2ec0bfa5-e0db-4802-aa64-1c6530556f34.png)
+**Note**
+None of the values require quotation marks ("") around them.
+
+After you set up the app, a console pops up asking you for the following inputs: 
+1.	App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven’t created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
+
+2.	Path to the zipped file. Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`.
+
+3.	Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
+
+4.	Certificate name. This name is configured in your registered application. If you haven’t created a certificate yet, refer to [How to create a self-signed certificate](https://learn.microsoft.com/azure/active-directory/develop/howto-create-self-signed-certificate). After you upload the certificate, the certificate name shows up under **Description** in the Azure Portal. 
