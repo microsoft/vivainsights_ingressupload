@@ -2,7 +2,7 @@
 
 ## Set up the application
 
-1.	Clone the app. Open a command prompt and enter the following command: git clone https://github.com/microsoft/vivainsights_ingressupload.git.
+1.	Clone the app. Open a command prompt and enter the following command: `git clone https://github.com/microsoft/vivainsights_ingressupload.git`.
 2.	If Visual Studio was open, close it. Open or re-open Visual Studio as an administrator.
 3.	On the right, select Open a local folder. Choose the cloned folder (vivainsights_ingressupload). 
    
