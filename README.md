@@ -5,7 +5,9 @@
 1.	Clone the app. Open a command prompt and enter the following command: git clone https://github.com/microsoft/vivainsights_ingressupload.git.
 2.	If Visual Studio was open, close it. Open or re-open Visual Studio as an administrator.
 3.	On the right, select Open a local folder. Choose the cloned folder (vivainsights_ingressupload). 
-   **Note**: The cloned folder will live in whichever directory you ran the git clone command from.
+   
+    **Note**: The cloned folder will live in whichever directory you ran the git clone command from.
+   
 4.	On the right, in the **Solution Explorer** tab, double-click **DescriptiveDataUploadApp.sln**.
 
       <img width="350" alt="admin-upload-app-sln" src="https://user-images.githubusercontent.com/98846621/229250984-54df60e1-5249-4cd2-9f04-6272d63143a1.png">
@@ -18,8 +20,7 @@
 
 ## Enter values in the console
 
-**Note**
-None of the values require quotation marks ("") around them.
+**Note**: None of the values require quotation marks ("") around them.
 
 After you set up the app, a console pops up asking you for the following inputs: 
 1.	App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven’t created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
