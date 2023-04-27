@@ -69,6 +69,7 @@ namespace HttpClientCallerApp
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("x-nova-scaleunit", scaleUnit);
             
             var form = new MultipartFormDataContent();
             var byteArray = File.ReadAllBytes(pathToZippedFile);
