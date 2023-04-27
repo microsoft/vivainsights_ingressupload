@@ -13,6 +13,7 @@ namespace HttpClientCallerApp
         private string pathToZippedFile = string.Empty;
         private string tenantId = string.Empty;
         private string certName = string.Empty;
+        private string scaleUnit = string.Empty;
 
         static void Main()
         {
@@ -37,8 +38,11 @@ namespace HttpClientCallerApp
 
                 Console.WriteLine("\nCertificate name for your registered application:");
                 certName = Console.ReadLine() ?? certName;
+                
+                Console.WriteLine("\nScale unit of your tenant:");
+                scaleUnit = Console.ReadLine() ?? scaleUnit;
 
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty)
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || scaleUnit == string.Empty)
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
