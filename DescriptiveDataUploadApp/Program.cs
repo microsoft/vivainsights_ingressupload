@@ -57,10 +57,10 @@ namespace HttpClientCallerApp
                     emptyInput = false;
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, scaleUnit).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string scaleUnit)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
