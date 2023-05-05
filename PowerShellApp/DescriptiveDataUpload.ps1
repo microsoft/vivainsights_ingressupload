@@ -123,7 +123,6 @@ else
         $appToken = GetAppTokenFromClientSecret $ClientId $ClientSecret $TenantId 
 }
 
-Write-Host $appToken
 $apiToAccess = $NovaPpeApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
 
 
