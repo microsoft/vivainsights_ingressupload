@@ -5,7 +5,7 @@ $NovaPpeUri = "01f9d889-ee31-41cb-85fa-3ad7e0981fa1";
 $NovaPrdApi = "https://api.orginsights.viva.office.com/v1.0/scopes/";
 $NovaPpeApi = "https://novappe.microsoft.com/v1.0/scopes/";
 $loginURL = "https://login.microsoftonline.com"
-$Scope = $NovaPpeUri + "/.default"
+$Scope = $NovaPrdUri + "/.default"
 $Scopes = New-Object System.Collections.Generic.List[string]
 $Scopes.Add($Scope)
 
@@ -123,11 +123,14 @@ else
         $appToken = GetAppTokenFromClientSecret $ClientId $ClientSecret $TenantId 
 }
 
-$apiToAccess = $NovaPpeApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
+$apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
 
 
 try {
         $client = New-Object System.Net.Http.HttpClient
+        $client.DefaultRequestHeaders.Accept.Clear()
+        $mediaType = New-Object System.Net.Http.Headers.MediaTypeWithQualityHeaderValue "application/json"
+        $client.DefaultRequestHeaders.Accept.Add($mediaType);
         $client.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
         $client.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
         $content = New-Object System.Net.Http.MultipartFormDataContent
