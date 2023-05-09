@@ -21,14 +21,15 @@ Run the power shell script .\DescriptiveDataUpload.ps1 in PowerShell
 
 Sample request:
 ``` 
-POST, RequestUri:'https://novappe.microsoft.com/v1.0/scopes/<tenantId>/ingress/connectors/HR/ingestions/fileIngestion',
- Headers:
-{
-  x-nova-scaleunit: <scale unit>
-  Authorization: Bearer <bearer token generated from Client ID & Client certificate/secret>
-  Content-Type: multipart/form-data; 
-}
-Body : zip file 
+ Method: POST, RequestUri: 'https://api.orginsights.viva.office.com/v1.0/scopes/<tenantId>/ingress/conne
+                      ctors/HR/ingestions/fileIngestion', Version: 1.1, Content: System.Net.Http.MultipartFormDataContent, Headers:
+                      {
+                        Accept: application/json
+                        x-nova-scaleunit: novaprdwus2-02
+                        Authorization: Bearer <bearer token from ClientID and client certificate/secret>"
+                        Content-Length: 729
+                      }
+                      Content: <zip file>
 ``` 
 Sample response: 
 ```
