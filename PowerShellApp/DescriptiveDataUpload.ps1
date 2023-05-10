@@ -1,4 +1,65 @@
+<#
+ .Synopsis
+    Runs the Data Descriptive upload api 
+    
+ .Description
+    This script sets up runs a POST request to https://api.orginsights.viva.office.com/v1.0/scopes/<tenantId>/ingress/connectors/HR/ingestions/fileIngestion
+
+ .Parameter ClientID
+   App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven't created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
+
+ .Parameter pathToZippedFile
+   Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`.
+
+ .Parameter TenantId
+    Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
+
+.Parameter novaScaleUnit
+    Please enter the value `novaprdwus2-02`.
+
+.Parameter certificateName 
+   This name is configured in your registered application.
+
+ .Parameter ClientSecret 
+    A secret string that the application uses to prove its identity when requesting a token. Also can be referred to as application password. This is only shown for the first time when the client secret is created.
+
+ .Example
+    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -ClientSecret ****
+
+ .Example
+   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -certificateName CN=ypochampally-certificate
+
+#>
+
+param
+(
+        [Parameter(Position = 0, Mandatory = $true, HelpMessage = "AppId/Client ID")]
+        [string] $ClientId,
+   
+        [Parameter(Position = 1, Mandatory = $true,
+                HelpMessage = "Absolute path to the zipped file you wish to upload")]
+        [string] $pathToZippedFile,
+   
+        [Parameter(Position = 2, Mandatory = $true,
+                HelpMessage = "Azure Active Directory (AAD) Tenant ID")]
+        [string] $TenantId,
+   
+        [Parameter(Position = 3, Mandatory = $true,
+                HelpMessage = "Scale unit associated with the AAD Tenant ID")]
+        [string] $novaScaleUnit,
+
+        [Parameter(Mandatory = $false,
+                HelpMessage = "Certificate name for your registered application")]
+        [string] $certificateName,
+
+        [Parameter(Mandatory = $false,
+                HelpMessage = "Client secret for your registered application")]
+        [string] $ClientSecret 
+
+);
+
 import-Module -Name MSAL.PS
+Add-Type -AssemblyName System.Net.Http
 
 $NovaPrdUri = "9d827643-d003-4cca-9dc8-71213a8f1644";
 $NovaPpeUri = "01f9d889-ee31-41cb-85fa-3ad7e0981fa1";
@@ -21,34 +82,22 @@ function IsGuid {
         return [System.Guid]::TryParse($StringGuid, [System.Management.Automation.PSReference]$ObjectGuid) # Returns True if successfully parsed
 }
 
-function ValidateString ([string] $inputString)
-{
-        if ([string]::IsNullOrWhitespace($inputString)) {
-                Write-Host   "None of the inputs can be empty strings or nulls.`nPlease go through the process again to upload your file." -ForegroundColor Red
-                exit 0
-        }
-}
 
-function FindCertificate([string] $certificateName)
-{
+function FindCertificate([string] $certificateName) {
         try {
                 $currentCertificate = Get-ChildItem Cert:\CurrentUser\My\ | Where-Object { $_.Subject -eq "$certificateName" }
-                if ([string]::IsNullOrWhitespace($currentCertificate))
-                {
-                        $localCertificate =  Get-ChildItem Cert:\LocalMachine\My\ | Where-Object { $_.Subject -eq "$certificateName" }
-                        if ([string]::IsNullOrWhitespace($localCertificate))
-                        {
+                if ([string]::IsNullOrWhitespace($currentCertificate)) {
+                        $localCertificate = Get-ChildItem Cert:\LocalMachine\My\ | Where-Object { $_.Subject -eq "$certificateName" }
+                        if ([string]::IsNullOrWhitespace($localCertificate)) {
                                 Write-Host   "Failed to load the certificate with find name "+$certificateName -ForegroundColor Red
                                 exit 0
                         }
-                        else 
-                        {
+                        else {
                                
                                 return $localCertificate
                         }
                 }
-                else 
-                {
+                else {
                         return $currentCertificate  
                 }
         }
@@ -93,36 +142,22 @@ function GetAppTokenFromClientCertificate ( [string] $ClientId, [string]$certifi
         return $appToken;
 }
 
-
-
-$ClientId = Read-Host -Prompt "AppId/Client ID"
-ValidateString $ClientId
-$pathToZippedFile = Read-Host -Prompt "Please enter the absolute path to the zipped file you wish to upload"
-ValidateString $pathToZippedFile
-$TenantId = Read-Host -Prompt "Azure Active Directory (AAD) Tenant ID"
-ValidateString $TenantId
-$novaScaleUnit = Read-Host -Prompt "Scale unit associated with the AAD Tenant ID"
-ValidateString $novaScaleUnit
-
 if (-NOT(IsGuid $ClientId) -or -NOT(IsGuid $TenantId)) {
         Write-Host   "The appId and/or the tenantId is not a valid Guid.`nPlease go through the process again to upload your file." -ForegroundColor Red
         exit 0
 }       
-$option = Read-Host -Prompt "Please type 1 if you wish to provide certificate name and type 2 if you wish to provide client secret"
-$appToken
-if($option.Equals("1"))
-{
-        $certificateName = Read-Host -Prompt "Certificate name for your registered application"
-        ValidateString $certificateName
+
+$appToken = ""
+if (-NOT([string]::IsNullOrWhitespace($certificateName))) {
         $appToken = GetAppTokenFromClientCertificate $ClientId $certificateName $TenantId 
 }
-else 
-{
-        $ClientSecret = Read-Host -Prompt "Client secret for your registered application"
-        ValidateString $ClientSecret
+elseif (-NOT([string]::IsNullOrWhitespace($ClientSecret))) {
         $appToken = GetAppTokenFromClientSecret $ClientId $ClientSecret $TenantId 
 }
-
+else { 
+        Write-Host   "Either certificateName or ClientSecret has to be provided" -ForegroundColor Red
+        exit 0
+}
 $apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
 
 
