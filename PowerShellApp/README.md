@@ -3,6 +3,7 @@
 
 ## Install MSAL.PS
 Use the command below or go to https://www.powershellgallery.com/packages/MSAL.PS for instructions on installation
+
 ``` Install-Module -Name MSAL.PS ```
 
 
