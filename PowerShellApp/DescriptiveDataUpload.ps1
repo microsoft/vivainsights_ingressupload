@@ -3,7 +3,7 @@
     Runs the Data Descriptive upload api 
     
  .Description
-    This script sets up runs a POST request to https://api.orginsights.viva.office.com/v1.0/scopes/<tenantId>/ingress/connectors/HR/ingestions/fileIngestion
+    This script runs a POST request to https://api.orginsights.viva.office.com/v1.0/scopes/<tenantId>/ingress/connectors/HR/ingestions/fileIngestion
 
  .Parameter ClientID
    App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven't created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
@@ -14,14 +14,14 @@
  .Parameter TenantId
     Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 
-.Parameter novaScaleUnit
-    Please enter the value `novaprdwus2-02`.
+ .Parameter novaScaleUnit
+    The scaleunit for your tenant. Eg: novaprdwus2-02 
 
-.Parameter certificateName 
-   This name is configured in your registered application.
+ .Parameter certificateName 
+   This certificate name is configured in your registered application. Either the certificateName or the ClientSecret parameter has to be provided 
 
  .Parameter ClientSecret 
-    A secret string that the application uses to prove its identity when requesting a token. Also can be referred to as application password. This is only shown for the first time when the client secret is created.
+    A secret string that the application uses to prove its identity when requesting a token. Either the certificateName or the ClientSecret parameter has to be provided 
 
  .Example
     .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -ClientSecret ****
@@ -155,7 +155,7 @@ elseif (-NOT([string]::IsNullOrWhitespace($ClientSecret))) {
         $appToken = GetAppTokenFromClientSecret $ClientId $ClientSecret $TenantId 
 }
 else { 
-        Write-Host   "Either certificateName or ClientSecret has to be provided" -ForegroundColor Red
+        Write-Host   "Either certificateName or ClientSecret has to be provided. `nPlease go through the process again to upload your file." -ForegroundColor Red
         exit 0
 }
 $apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
