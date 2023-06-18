@@ -26,6 +26,8 @@ Examples
 
 ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate```
 
+## API 
+
 Sample request:
 ``` 
  Method: POST, RequestUri: 'https://api.orginsights.viva.office.com/v1.0/scopes/<tenantId>/ingress/conne
