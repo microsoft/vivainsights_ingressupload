@@ -22,11 +22,11 @@ Mandatory parameters
 
 Examples
 
-``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType HR -ClientSecret ****```
+1. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType HR -ClientSecret ****```
 
-``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate```
+2. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate```
 
-## API 
+## API that the script runs 
 
 Sample request:
 ``` 
