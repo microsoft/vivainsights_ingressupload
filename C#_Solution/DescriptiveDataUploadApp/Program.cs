@@ -14,6 +14,7 @@ namespace HttpClientCallerApp
         private string tenantId = string.Empty;
         private string certName = string.Empty;
         private string scaleUnit = string.Empty;
+        private ConnectorType connectorType = ConnectorType.HR;
 
         static void Main()
         {
@@ -42,7 +43,12 @@ namespace HttpClientCallerApp
                 Console.WriteLine("\nScale unit of your tenant:");
                 scaleUnit = Console.ReadLine() ?? scaleUnit;
 
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || scaleUnit == string.Empty)
+                Console.WriteLine("\nConnectorType:");
+
+                string connectorTypeString = string.Empty;
+                connectorTypeString = Console.ReadLine() ?? connectorTypeString;
+
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || scaleUnit == string.Empty || connectorTypeString == string.Empty)
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
@@ -55,12 +61,20 @@ namespace HttpClientCallerApp
                 else
                 {
                     emptyInput = false;
+                    if (string.Equals(connectorTypeString, ConnectorType.Survey.ToString(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        connectorType = ConnectorType.Survey;
+                    }
+                    else
+                    {
+                        connectorType = ConnectorType.HR;
+                    }
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, scaleUnit).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, scaleUnit, connectorType).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string scaleUnit)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string scaleUnit, ConnectorType connectorType)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -75,9 +89,10 @@ namespace HttpClientCallerApp
             var byteArray = File.ReadAllBytes(pathToZippedFile);
             form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
             var apiToAccess = string.Format(
-                "{0}/{1}/ingress/connectors/HR/ingestions/fileIngestion",
+                "{0}/{1}/ingress/connectors/{2}/ingestions/fileIngestion",
                 Constants.NovaPrdApi,
-                tenantId);
+                tenantId,
+                connectorType);
 
             try
             {
