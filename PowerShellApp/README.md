@@ -12,7 +12,7 @@ Use the command below or go to https://www.powershellgallery.com/packages/MSAL.P
 
 Mandatory parameters 
 1.	App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven’t created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
-2.	Path to the zip folder. Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`. If you haven't downloaded the zip folder yet, find it [here](https://go.microsoft.com/fwlink/?linkid=2230444)  . Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder. The file names data.csv and meta.json should not be changed
+2.	Path to the zip folder. Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`. If you haven't downloaded the zip folder yet, find it [here](https://microsoft-my.sharepoint.com/:f:/p/ypochampally/EgrLeWo6hBJNiZdSbmrSA2gB5MgmZGXtuBy7Z-0tZ91NZw?e=X1O5o2)  . Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder. The file names data.csv and meta.json should not be changed
 3.	Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 4.	Scale Unit: The scaleunit for your teanant. Eg: novaprdwus2-02  
 5.	When prompted for Client certificate or Client secret, choose 1 if you have a client certificate and choose 2 otherwise 
