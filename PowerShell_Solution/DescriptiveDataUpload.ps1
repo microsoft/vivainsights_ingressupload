@@ -23,11 +23,14 @@
  .Parameter ClientSecret 
     A secret string that the application uses to prove its identity when requesting a token. Either the certificateName or the ClientSecret parameter has to be provided 
 
- .Example
-    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -ClientSecret ****
+ .Parameter ConnectorType 
+    The connector type can either be "HR" or "Survey"
 
  .Example
-   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -certificateName CN=ypochampally-certificate
+    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType HR -ClientSecret ****
+
+ .Example
+   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate
 
 #>
 
@@ -47,6 +50,10 @@ param
         [Parameter(Position = 3, Mandatory = $true,
                 HelpMessage = "Scale unit associated with the AAD Tenant ID")]
         [string] $novaScaleUnit,
+
+        [Parameter(Position = 4, Mandatory = $true,
+                HelpMessage = "Connector type")]
+        [string] $connectorType,
 
         [Parameter(Mandatory = $false,
                 HelpMessage = "Certificate name for your registered application")]
@@ -145,7 +152,20 @@ function GetAppTokenFromClientCertificate ( [string] $ClientId, [string]$certifi
 if (-NOT(IsGuid $ClientId) -or -NOT(IsGuid $TenantId)) {
         Write-Host   "The appId and/or the tenantId is not a valid Guid.`nPlease go through the process again to upload your file." -ForegroundColor Red
         exit 0
+}   
+
+#case insensitive match
+if ($connectorType -eq "HR") {
+        $connectorType = "HR"
 }       
+elseif ($connectorType -eq "Survey") {
+        $connectorType = "Survey" 
+}
+else {
+        Write-Host   'ConnectorType can either be "Survey" or "HR". `nPlease go through the process again to upload your file.' -ForegroundColor Red
+        exit 0
+}
+
 
 $appToken = ""
 if (-NOT([string]::IsNullOrWhitespace($certificateName))) {
@@ -158,7 +178,7 @@ else {
         Write-Host   "Either certificateName or ClientSecret has to be provided. `nPlease go through the process again to upload your file." -ForegroundColor Red
         exit 0
 }
-$apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/HR/ingestions/fileIngestion"
+$apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/" + $connectorType + "/ingestions/fileIngestion"
 
 
 try {
