@@ -3,7 +3,7 @@
 Whenever it exports the zip folder from your source system, have your custom export app automatically run the DescriptiveDataUploadApp. Clone the DescriptiveDataUploadApp to your machine by running the following command: `git clone https://github.com/microsoft/vivainsights_ingressupload.git`.
 
 
-**Note:** If you haven't downloaded the zip folder yet, find sample files [here](https://microsoft-my.sharepoint.com/:f:/p/ypochampally/EgrLeWo6hBJNiZdSbmrSA2gB5MgmZGXtuBy7Z-0tZ91NZw?e=X1O5o2). Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder.
+**Note:** If you haven't downloaded the zip folder yet, you can download it [here](https://go.microsoft.com/fwlink/?linkid=2230444). Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder.
 
 After the custom export app runs the DescriptiveDataUploadApp, a console pops up asking you for the following inputs: 
 
