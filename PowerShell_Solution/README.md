@@ -4,12 +4,10 @@
 
 ``` git clone https://github.com/microsoft/vivainsights_ingressupload.git``` 
 
-Go to the specific folder in PowerShell terminal 
-``` cd vivainsights_ingressupload/PowerShellApp ``` 
-
 ## Install MSAL.PS
 
-Run the command below in PowerShell terminal 
+Run the command below after opening the PowerShell with admin privilege
+
 ``` Install-Module -Name MSAL.PS ```
 
 or go to https://www.powershellgallery.com/packages/MSAL.PS for instructions on installation
@@ -28,6 +26,10 @@ Mandatory parameters
 8.	Client secret: A secret string that the application uses to prove its identity when requesting a token. Also can be referred to as application password. This is only shown for the first time when the client secret is created. 
 
 # Run the script 
+
+Go to the specific folder 
+
+``` cd vivainsights_ingressupload/PowerShellApp ``` 
 
 Run the script with parameters in PowerShell terminal 
 
