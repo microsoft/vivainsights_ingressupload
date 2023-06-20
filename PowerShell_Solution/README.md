@@ -1,11 +1,18 @@
 # PowerShell script to run the Descriptive Data Upload Api 
 
+## Clone the source code 
+
+``` git clone https://github.com/microsoft/vivainsights_ingressupload.git``` 
+
+Go to the specific folder in PowerShell terminal 
+``` cd vivainsights_ingressupload/PowerShellApp ``` 
 
 ## Install MSAL.PS
-Use the command below or go to https://www.powershellgallery.com/packages/MSAL.PS for instructions on installation
 
+Run the command below in PowerShell terminal 
 ``` Install-Module -Name MSAL.PS ```
 
+or go to https://www.powershellgallery.com/packages/MSAL.PS for instructions on installation
 
 
 ## Inputs parameters for the script 
@@ -20,11 +27,13 @@ Mandatory parameters
 7.	Certificate name: This name is configured in your registered application. If you haven’t created a certificate yet, refer to [How to create a self-signed certificate](https://learn.microsoft.com/azure/active-directory/develop/howto-create-self-signed-certificate). After you upload the certificate, the certificate name shows up under **Description** in the Azure Portal.
 8.	Client secret: A secret string that the application uses to prove its identity when requesting a token. Also can be referred to as application password. This is only shown for the first time when the client secret is created. 
 
-Examples
+# Run the script 
 
-1. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType HR -ClientSecret ****```
+Run the script with parameters in PowerShell terminal 
 
-2. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate```
+1. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novaprdwusXXX -connectorType HR -ClientSecret ****```
+
+2. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novaprdwusXXX -connectorType Survey -certificateName CN=ypochampally-certificate```
 
 ## API that the script runs 
 
