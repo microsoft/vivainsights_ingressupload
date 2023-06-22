@@ -3,7 +3,7 @@
 Whenever it exports the zip folder from your source system, have your custom export app automatically run the DescriptiveDataUploadApp. Clone the DescriptiveDataUploadApp to your machine by running the following command: `git clone https://github.com/microsoft/vivainsights_ingressupload.git`.
 
 
-**Note:** If you haven't downloaded the zip folder yet, find sample files [here](https://microsoft-my.sharepoint.com/:f:/p/ypochampally/EgrLeWo6hBJNiZdSbmrSA2gB5MgmZGXtuBy7Z-0tZ91NZw?e=X1O5o2). Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder.
+**Note:** If you haven't downloaded the zip folder yet, you can download it [here](https://go.microsoft.com/fwlink/?linkid=2230444). Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder.
 
 After the custom export app runs the DescriptiveDataUploadApp, a console pops up asking you for the following inputs: 
 
@@ -15,5 +15,5 @@ After the custom export app runs the DescriptiveDataUploadApp, a console pops up
 
 4.	Certificate name. This name is configured in your registered application. If you haven’t created a certificate yet, refer to [How to create a self-signed certificate](https://learn.microsoft.com/azure/active-directory/develop/howto-create-self-signed-certificate). After you upload the certificate, the certificate name shows up under **Description** in the Azure Portal. 
 
-5. Scale Unit: The scaleunit for your teanant. Eg: `novaprdwus2-02`.
+5. Scale Unit: The scale unit for your tenant. Eg: `novaprdwus2-02`.
 6. Connector Type: `HR` or `Survey`
