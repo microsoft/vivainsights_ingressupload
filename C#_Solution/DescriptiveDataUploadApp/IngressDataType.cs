@@ -1,6 +1,6 @@
 ﻿namespace DescriptiveDataUploadApp
 {
-    public enum ConnectorType
+    public enum IngressDataType
     {
         HR,
         Survey
