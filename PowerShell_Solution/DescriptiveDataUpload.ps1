@@ -14,23 +14,20 @@
  .Parameter TenantId
     Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 
- .Parameter novaScaleUnit
-    The scaleunit for your tenant. Eg: novaprdwus2-02 
-
  .Parameter certificateName 
    This certificate name is configured in your registered application. Either the certificateName or the ClientSecret parameter has to be provided 
 
  .Parameter ClientSecret 
     A secret string that the application uses to prove its identity when requesting a token. Either the certificateName or the ClientSecret parameter has to be provided 
 
- .Parameter ConnectorType 
-    The connector type can either be "HR" or "Survey"
+ .Parameter ingressDataType 
+    The ingressDataType can either be "HR" or "Survey"
 
  .Example
-    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType HR -ClientSecret ****
+    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret ****
 
  .Example
-   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -novaScaleUnit novappewus2-02 -connectorType Survey -certificateName CN=ypochampally-certificate
+   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate
 
 #>
 
@@ -46,14 +43,10 @@ param
         [Parameter(Position = 2, Mandatory = $true,
                 HelpMessage = "Azure Active Directory (AAD) Tenant ID")]
         [string] $TenantId,
-   
-        [Parameter(Position = 3, Mandatory = $true,
-                HelpMessage = "Scale unit associated with the AAD Tenant ID")]
-        [string] $novaScaleUnit,
 
         [Parameter(Position = 4, Mandatory = $true,
-                HelpMessage = "Connector type")]
-        [string] $connectorType,
+                HelpMessage = "Ingress Data Type")]
+        [string] $ingressDataType,
 
         [Parameter(Mandatory = $false,
                 HelpMessage = "Certificate name for your registered application")]
@@ -70,8 +63,8 @@ Add-Type -AssemblyName System.Net.Http
 
 $NovaPrdUri = "9d827643-d003-4cca-9dc8-71213a8f1644";
 $NovaPpeUri = "01f9d889-ee31-41cb-85fa-3ad7e0981fa1";
-$NovaPrdApi = "https://api.orginsights.viva.office.com/v1.0/scopes/";
-$NovaPpeApi = "https://novappe.microsoft.com/v1.0/scopes/";
+$NovaPrdApi = "https://api.orginsights.viva.office.com/v1.0/";
+$NovaPpeApi = "https://novappe.microsoft.com/v1.0/";
 $loginURL = "https://login.microsoftonline.com"
 $Scope = $NovaPrdUri + "/.default"
 $Scopes = New-Object System.Collections.Generic.List[string]
@@ -155,14 +148,14 @@ if (-NOT(IsGuid $ClientId) -or -NOT(IsGuid $TenantId)) {
 }   
 
 #case insensitive match
-if ($connectorType -eq "HR") {
-        $connectorType = "HR"
+if ($ingressDataType -eq "HR") {
+        $ingressDataType = "HR"
 }       
-elseif ($connectorType -eq "Survey") {
-        $connectorType = "Survey" 
+elseif ($ingressDataType -eq "Survey") {
+        $ingressDataType = "Survey" 
 }
 else {
-        Write-Host   'ConnectorType can either be "Survey" or "HR". `nPlease go through the process again to upload your file.' -ForegroundColor Red
+        Write-Host   'ingressDataType can either be "Survey" or "HR". `nPlease go through the process again to upload your file.' -ForegroundColor Red
         exit 0
 }
 
@@ -178,26 +171,35 @@ else {
         Write-Host   "Either certificateName or ClientSecret has to be provided. `nPlease go through the process again to upload your file." -ForegroundColor Red
         exit 0
 }
-$apiToAccess = $NovaPrdApi + $TenantId + "/ingress/connectors/" + $connectorType + "/ingestions/fileIngestion"
+$ScaleUnitEndPoint =  $NovaPrdApi + "tenants/" + $TenantId + "/scaleUnit"
+$DescriptiveDataUploadEndPoint = $NovaPrdApi + "scopes/" + $TenantId + "/ingress/connectors/" + $ingressDataType + "/ingestions/fileIngestion"
 
 
 try {
-        $client = New-Object System.Net.Http.HttpClient
-        $client.DefaultRequestHeaders.Accept.Clear()
+        $client1 = New-Object System.Net.Http.HttpClient
+        $client1.DefaultRequestHeaders.Accept.Clear() 
         $mediaType = New-Object System.Net.Http.Headers.MediaTypeWithQualityHeaderValue "application/json"
-        $client.DefaultRequestHeaders.Accept.Add($mediaType);
-        $client.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
-        $client.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
+        $client1.DefaultRequestHeaders.Accept.Add($mediaType);
+        $client1.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
+        $scaleUnitResult = $client1.GetAsync($ScaleUnitEndPoint).Result;
+        $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"","")
+
+        $client2 = New-Object System.Net.Http.HttpClient
+        $client2.DefaultRequestHeaders.Accept.Clear()
+        $client2.DefaultRequestHeaders.Accept.Add($mediaType);
+        $client2.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
+        $client2.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
         $content = New-Object System.Net.Http.MultipartFormDataContent
         $fileStream = [System.IO.File]::OpenRead($pathToZippedFile)
         $fileName = [System.IO.Path]::GetFileName($pathToZippedFile)
         $fileContent = New-Object System.Net.Http.StreamContent($fileStream)
         $content.Add($fileContent, "info", $fileName)
-        $result = $client.PostAsync($apiToAccess, $content).Result;
+        $result = $client2.PostAsync($DescriptiveDataUploadEndPoint, $content).Result;
         $result.EnsureSuccessStatusCode()
         Write-Host "Request Status was success.`nIngestion is in progress. To check status, please visit the site.`n`nHere is the returned content:" -ForegroundColor Green
         $output = $result.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-        Write-Host $output
+        Write-Host $output 
+
 }
 catch {
         Write-Host "Request Status was not successful" -ForegroundColor Red
