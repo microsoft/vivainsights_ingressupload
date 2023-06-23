@@ -176,25 +176,25 @@ $DescriptiveDataUploadEndPoint = $NovaPrdApi + "scopes/" + $TenantId + "/ingress
 
 
 try {
-        $client1 = New-Object System.Net.Http.HttpClient
-        $client1.DefaultRequestHeaders.Accept.Clear() 
+        $client = New-Object System.Net.Http.HttpClient
+        $client.DefaultRequestHeaders.Accept.Clear() 
         $mediaType = New-Object System.Net.Http.Headers.MediaTypeWithQualityHeaderValue "application/json"
-        $client1.DefaultRequestHeaders.Accept.Add($mediaType);
-        $client1.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
-        $scaleUnitResult = $client1.GetAsync($ScaleUnitEndPoint).Result;
+        $client.DefaultRequestHeaders.Accept.Add($mediaType);
+        $client.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
+        
+        $scaleUnitResult = $client.GetAsync($ScaleUnitEndPoint).Result;
         $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"","")
 
-        $client2 = New-Object System.Net.Http.HttpClient
-        $client2.DefaultRequestHeaders.Accept.Clear()
-        $client2.DefaultRequestHeaders.Accept.Add($mediaType);
-        $client2.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
-        $client2.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
+       
+        $client.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
         $content = New-Object System.Net.Http.MultipartFormDataContent
         $fileStream = [System.IO.File]::OpenRead($pathToZippedFile)
         $fileName = [System.IO.Path]::GetFileName($pathToZippedFile)
         $fileContent = New-Object System.Net.Http.StreamContent($fileStream)
         $content.Add($fileContent, "info", $fileName)
-        $result = $client2.PostAsync($DescriptiveDataUploadEndPoint, $content).Result;
+
+
+        $result = $client.PostAsync($DescriptiveDataUploadEndPoint, $content).Result;
         $result.EnsureSuccessStatusCode()
         Write-Host "Request Status was success.`nIngestion is in progress. To check status, please visit the site.`n`nHere is the returned content:" -ForegroundColor Green
         $output = $result.Content.ReadAsStringAsync().GetAwaiter().GetResult()
