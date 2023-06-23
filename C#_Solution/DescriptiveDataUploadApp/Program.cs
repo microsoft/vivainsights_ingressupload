@@ -13,8 +13,7 @@ namespace HttpClientCallerApp
         private string pathToZippedFile = string.Empty;
         private string tenantId = string.Empty;
         private string certName = string.Empty;
-        private string scaleUnit = string.Empty;
-        private ConnectorType connectorType = ConnectorType.HR;
+        private IngressDataType ingressDataType = IngressDataType.HR;
 
         static void Main()
         {
@@ -40,15 +39,13 @@ namespace HttpClientCallerApp
                 Console.WriteLine("\nCertificate name for your registered application:");
                 certName = Console.ReadLine() ?? certName;
                 
-                Console.WriteLine("\nScale unit of your tenant:");
-                scaleUnit = Console.ReadLine() ?? scaleUnit;
+               
+                Console.WriteLine("\nIngress Data Type:");
 
-                Console.WriteLine("\nConnectorType:");
+                string ingressType = string.Empty;
+                ingressType = Console.ReadLine() ?? ingressType;
 
-                string connectorTypeString = string.Empty;
-                connectorTypeString = Console.ReadLine() ?? connectorTypeString;
-
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || scaleUnit == string.Empty || connectorTypeString == string.Empty)
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || ingressType == string.Empty)
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
@@ -61,20 +58,20 @@ namespace HttpClientCallerApp
                 else
                 {
                     emptyInput = false;
-                    if (string.Equals(connectorTypeString, ConnectorType.Survey.ToString(), StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(ingressType, IngressDataType.Survey.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
-                        connectorType = ConnectorType.Survey;
+                        ingressDataType = IngressDataType.Survey;
                     }
                     else
                     {
-                        connectorType = ConnectorType.HR;
+                        ingressDataType = IngressDataType.HR;
                     }
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, scaleUnit, connectorType).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, ingressDataType).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string scaleUnit, ConnectorType connectorType)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, IngressDataType ingressDataType)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -83,20 +80,49 @@ namespace HttpClientCallerApp
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("x-nova-scaleunit", scaleUnit);
-            
-            var form = new MultipartFormDataContent();
-            var byteArray = File.ReadAllBytes(pathToZippedFile);
-            form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
-            var apiToAccess = string.Format(
-                "{0}/{1}/ingress/connectors/{2}/ingestions/fileIngestion",
-                Constants.NovaPrdApi,
-                tenantId,
-                connectorType);
+
+            var ScaleUnitEndPoint = string.Format(
+               "{0}/tenants/{1}/scaleUnit",
+               Constants.NovaPrdApi,
+               tenantId);
+
+            var scaleUnit = string.Empty;
 
             try
             {
-                HttpResponseMessage message = await client.PostAsync(apiToAccess, form);
+                HttpResponseMessage message = await client.GetAsync(ScaleUnitEndPoint);
+
+                if (message.StatusCode == HttpStatusCode.OK)
+                {
+                    scaleUnit = await message.Content.ReadAsStringAsync();
+                    scaleUnit = scaleUnit.Replace("\"", "");
+                }
+                else
+                {
+                    Console.WriteLine($"\nRequest Status was not successful:\n {message.StatusCode}");
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            client.DefaultRequestHeaders.Add("x-nova-scaleunit", scaleUnit);
+            var form = new MultipartFormDataContent();
+            var byteArray = File.ReadAllBytes(pathToZippedFile);
+            form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
+
+            var DescriptiveDataUploadEndPoint = string.Format(
+                "{0}/scopes/{1}/ingress/connectors/{2}/ingestions/fileIngestion",
+                Constants.NovaPrdApi,
+                tenantId,
+                ingressDataType);
+
+            try
+            {
+                HttpResponseMessage message = await client.PostAsync(DescriptiveDataUploadEndPoint, form);
 
                 if (message.StatusCode == HttpStatusCode.OK)
                 {
