@@ -35,9 +35,9 @@ Go to the specific folder
 
 Run the script with parameters in PowerShell terminal 
 
-1. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret ****```
+1. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret **** -novaScaleUnit novaprdwus2-02```
 
-2. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate```
+2. ``` .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate  -novaScaleUnit novaprdwus2-02```
 
 ## API that the script runs 
 
