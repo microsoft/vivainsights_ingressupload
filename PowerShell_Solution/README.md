@@ -17,7 +17,7 @@ or go to https://www.powershellgallery.com/packages/MSAL.PS for instructions on 
 
 Mandatory parameters 
 1.	App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven’t created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
-2.	Path to the zip folder. Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`. If you haven't downloaded the zip folder yet, find it [here](https://go.microsoft.com/fwlink/?linkid=2230444)  . Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder. 
+2.	Path to the zip folder. Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`. If you haven't downloaded the zip folder yet, find it [here](https://go.microsoft.com/fwlink/?linkid=2243005). Refer to our [main data-import documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-org-data-first#prepare-the-data-export) for more information about using the files in this folder. Or, for importing survey results, download [this zip folder](https://go.microsoft.com/fwlink/?linkid=2242706) and refer to our [documentation](https://learn.microsoft.com/viva/insights/advanced/admin/import-survey-results).
 3.	Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 4.	Scale Unit: The scaleunit for your tenant. Eg: novaprdwus2-02  
 5.	Ingress Data Type: `HR` or `Survey`
