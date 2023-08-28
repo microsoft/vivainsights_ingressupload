@@ -14,9 +14,6 @@
  .Parameter TenantId
     Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 
- .Parameter novaScaleUnit
-    The scaleunit for your tenant. Eg: novaprdwus2-02 
-
  .Parameter certificateName 
    This certificate name is configured in your registered application. Either the certificateName or the ClientSecret parameter has to be provided 
 
@@ -27,10 +24,10 @@
     The ingressDataType can either be "HR" or "Survey"
 
  .Example
-    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret **** -novaScaleUnit novaprdwus2-02
+    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret **** 
 
  .Example
-   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate -novaScaleUnit novaprdwus2-02
+   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate 
 
 #>
 
@@ -48,10 +45,6 @@ param
         [string] $TenantId,
 
         [Parameter(Position = 3, Mandatory = $true,
-                HelpMessage = "Scale unit associated with the AAD Tenant ID")]
-        [string] $novaScaleUnit,
-
-        [Parameter(Position = 4, Mandatory = $true,
                 HelpMessage = "Ingress Data Type")]
         [string] $ingressDataType,
 
@@ -189,10 +182,9 @@ try {
         $client.DefaultRequestHeaders.Accept.Add($mediaType);
         $client.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
         
-       # Remove the comment when scale unit end point is stable  
-       # $ScaleUnitEndPoint =  $NovaPrdApi + "tenants/" + $TenantId + "/scaleUnit"
-       # $scaleUnitResult = $client.GetAsync($ScaleUnitEndPoint).Result;
-       # $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"","")
+        $ScaleUnitEndPoint =  $NovaPrdApi + "tenants/" + $TenantId + "/scopes/" + $TenantId + "/scaleUnit"
+        $scaleUnitResult = $client.GetAsync($ScaleUnitEndPoint).Result;
+        $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"","")
 
        
         $client.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
