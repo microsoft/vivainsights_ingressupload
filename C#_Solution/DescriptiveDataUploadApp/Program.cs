@@ -14,7 +14,6 @@ namespace HttpClientCallerApp
         private string tenantId = string.Empty;
         private string certName = string.Empty;
         private IngressDataType ingressDataType = IngressDataType.HR;
-        private string scaleUnit = string.Empty;
         static void Main()
         {
             var program = new Program();
@@ -39,15 +38,12 @@ namespace HttpClientCallerApp
                 Console.WriteLine("\nCertificate name for your registered application:");
                 certName = Console.ReadLine() ?? certName;
 
-                Console.WriteLine("\nScale unit of your tenant:");
-                scaleUnit = Console.ReadLine() ?? scaleUnit;
-
                 Console.WriteLine("\nIngress Data Type:");
 
                 string ingressType = string.Empty;
                 ingressType = Console.ReadLine() ?? ingressType;
 
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || ingressType == string.Empty || scaleUnit == string.Empty)
+                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || ingressType == string.Empty )
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
@@ -70,10 +66,10 @@ namespace HttpClientCallerApp
                     }
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, scaleUnit, ingressDataType).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, ingressDataType).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, string scaleUnit, IngressDataType ingressDataType)
+        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, IngressDataType ingressDataType)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -84,13 +80,13 @@ namespace HttpClientCallerApp
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
 
-            /* 
-             * var ScaleUnitEndPoint = string.Format(
-               "{0}/tenants/{1}/scaleUnit",
+             
+            var ScaleUnitEndPoint = string.Format(
+               "{0}/tenants/{1}/scopes/{2}/scaleUnit",
                Constants.NovaPrdApi,
+               tenantId,
                tenantId);
-             * Remove the comment when the ScaleUnit end point is stable
-            var scaleUnit = string.Empty;
+            string scaleUnit;
 
             try
             {
@@ -111,7 +107,7 @@ namespace HttpClientCallerApp
             {
                 Console.WriteLine(e.Message);
                 return;
-            } */
+            } 
 
             client.DefaultRequestHeaders.Add("x-nova-scaleunit", scaleUnit);
             var form = new MultipartFormDataContent();

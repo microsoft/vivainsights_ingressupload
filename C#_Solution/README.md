@@ -14,5 +14,4 @@ After the custom export app runs the DescriptiveDataUploadApp, a console pops up
 3.	Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
 
 4.	Certificate name. This name is configured in your registered application. If you haven’t created a certificate yet, refer to [How to create a self-signed certificate](https://learn.microsoft.com/azure/active-directory/develop/howto-create-self-signed-certificate). After you upload the certificate, the certificate name shows up under **Description** in the Azure Portal.
-5.	Scale Unit: The scale unit for your tenant. Eg: `novaprdwus2-02`.
-6. Ingress Data Type: `HR` or `Survey`
+5. Ingress Data Type: `HR` or `Survey`
