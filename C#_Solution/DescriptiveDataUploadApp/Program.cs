@@ -10,7 +10,7 @@ namespace HttpClientCallerApp
     {
         static HttpClient client = new HttpClient();
         private string appId = string.Empty;
-        private string pathToZippedFile = string.Empty;
+        private string pathToFile = string.Empty;
         private string tenantId = string.Empty;
         private string certName = string.Empty;
         private IngressDataType ingressDataType = IngressDataType.HR;
@@ -29,8 +29,8 @@ namespace HttpClientCallerApp
                 Console.WriteLine("AppId/Client ID:");
                 appId = Console.ReadLine() ?? appId;
 
-                Console.WriteLine("\nPlease enter the absolute path to the zipped file you wish to upload.\nFor example: C:\\\\Users\\\\JaneDoe\\\\OneDrive - Microsoft\\\\Desktop\\\\info.zip");
-                pathToZippedFile = Console.ReadLine() ?? pathToZippedFile;
+                Console.WriteLine("\nPlease enter the absolute path to the file you wish to upload.\nFor example: C:\\\\Users\\\\JaneDoe\\\\OneDrive - Microsoft\\\\Desktop\\\\info.zip");
+                pathToFile = Console.ReadLine() ?? pathToFile;
 
                 Console.WriteLine("\nAzure Active Directory (AAD) Tenant ID:");
                 tenantId = Console.ReadLine() ?? tenantId;
@@ -43,7 +43,7 @@ namespace HttpClientCallerApp
                 string ingressType = string.Empty;
                 ingressType = Console.ReadLine() ?? ingressType;
 
-                if (appId == string.Empty || pathToZippedFile == string.Empty || tenantId == string.Empty || certName == string.Empty || ingressType == string.Empty )
+                if (appId == string.Empty || pathToFile == string.Empty || tenantId == string.Empty || certName == string.Empty || ingressType == string.Empty )
                 {
                     Console.WriteLine("\nNone of the inputs can be empty strings or nulls. \nPlease go through the process again to upload your file.\n");
                     emptyInput = true;
@@ -66,10 +66,10 @@ namespace HttpClientCallerApp
                     }
                 }
             }
-            new Program().RunAsync(appId, pathToZippedFile, tenantId, certName, ingressDataType).GetAwaiter().GetResult();
+            new Program().RunAsync(appId, pathToFile, tenantId, certName, ingressDataType).GetAwaiter().GetResult();
         }
 
-        private async Task RunAsync(string appId, string pathToZippedFile, string tenantId, string certName, IngressDataType ingressDataType)
+        private async Task RunAsync(string appId, string pathToFile, string tenantId, string certName, IngressDataType ingressDataType)
         {
             var appToken = await new Program().GetAppToken(tenantId, appId, certName);
             var bearerToken = string.Format("Bearer {0}", appToken);
@@ -110,9 +110,27 @@ namespace HttpClientCallerApp
             } 
 
             client.DefaultRequestHeaders.Add("x-nova-scaleunit", scaleUnit);
-            var form = new MultipartFormDataContent();
-            var byteArray = File.ReadAllBytes(pathToZippedFile);
-            form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToZippedFile);
+
+            HttpContent content;
+            string fileExtension = Path.GetExtension(pathToFile).ToLower();
+            var byteArray = File.ReadAllBytes(pathToFile);
+
+            if (fileExtension == ".csv")
+            {
+                content = new ByteArrayContent(byteArray);
+                content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+            }
+            else if (fileExtension == ".json")
+            {
+                content = new ByteArrayContent(byteArray);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            }
+            else
+            {
+                var form = new MultipartFormDataContent();
+                form.Add(new ByteArrayContent(byteArray, 0, byteArray.Length), "info", pathToFile);
+                content = form;
+            }
 
             var DescriptiveDataUploadEndPoint = string.Format(
                 "{0}/scopes/{1}/ingress/connectors/{2}/ingestions/fileIngestion",
@@ -122,12 +140,12 @@ namespace HttpClientCallerApp
 
             try
             {
-                HttpResponseMessage message = await client.PostAsync(DescriptiveDataUploadEndPoint, form);
+                HttpResponseMessage message = await client.PostAsync(DescriptiveDataUploadEndPoint, content);
 
                 if (message.StatusCode == HttpStatusCode.OK)
                 {
                     string responseBody = await message.Content.ReadAsStringAsync();
-                    Console.WriteLine($"\nRequest Status was success.\nIngestion is in progress. To check status, please visit the site.\n\nHere is the returned content:\n {responseBody})");
+                    Console.WriteLine($"\nRequest Status was success.\nIngestion is in progress. To check status, please visit the site.\n\nHere is the returned content:\n {responseBody}");
                 }
                 else
                 {

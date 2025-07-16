@@ -8,8 +8,8 @@
  .Parameter ClientID
    App (client) ID. Find this ID in the registered app information on the Azure portal under **Application (client) ID**. If you haven't created and registered your app yet, follow the instructions in our main data import documentation, under Register a new app in Azure.
 
- .Parameter pathToZippedFile
-   Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`.
+ .Parameter pathToFile
+   Format the path like this: `C:\\Users\\JaneDoe\\OneDrive - Microsoft\\Desktop\\info.zip`. File can be a ZIP, JSON, or CSV file.
 
  .Parameter TenantId
     Azure Active Directory tenant ID. Also find this ID on the app's overview page under **Directory (tenant) ID**.
@@ -24,10 +24,10 @@
     The ingressDataType can either be "HR" or "Survey"
 
  .Example
-    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret **** 
+    .\DescriptiveDataUpload.ps1 -ClientId **** -pathToFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType HR -ClientSecret **** 
 
  .Example
-   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToZippedFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate 
+   .\DescriptiveDataUpload.ps1 -ClientId **** -pathToFile  "C:\repos\temp\info.zip" -TenantId ***** -ingressDataType Survey -certificateName CN=ypochampally-certificate 
 
 #>
 
@@ -38,7 +38,7 @@ param
    
         [Parameter(Position = 1, Mandatory = $true,
                 HelpMessage = "Absolute path to the zipped file you wish to upload")]
-        [string] $pathToZippedFile,
+        [string] $pathToFile,
    
         [Parameter(Position = 2, Mandatory = $true,
                 HelpMessage = "Azure Active Directory (AAD) Tenant ID")]
@@ -182,17 +182,33 @@ try {
         $client.DefaultRequestHeaders.Accept.Add($mediaType);
         $client.DefaultRequestHeaders.Add("Authorization", "Bearer " + $appToken);
         
-        $ScaleUnitEndPoint =  $NovaPrdApi + "tenants/" + $TenantId + "/scopes/" + $TenantId + "/scaleUnit"
+        $ScaleUnitEndPoint = $NovaPrdApi + "tenants/" + $TenantId + "/scopes/" + $TenantId + "/scaleUnit"
         $scaleUnitResult = $client.GetAsync($ScaleUnitEndPoint).Result;
-        $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"","")
+        $novaScaleUnit = $scaleUnitResult.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("`"", "")
 
        
         $client.DefaultRequestHeaders.Add('x-nova-scaleunit', $novaScaleUnit);
-        $content = New-Object System.Net.Http.MultipartFormDataContent
-        $fileStream = [System.IO.File]::OpenRead($pathToZippedFile)
-        $fileName = [System.IO.Path]::GetFileName($pathToZippedFile)
-        $fileContent = New-Object System.Net.Http.StreamContent($fileStream)
-        $content.Add($fileContent, "info", $fileName)
+        
+        $fileExtension = [System.IO.Path]::GetExtension($pathToFile).ToLower()
+        $fileStream = [System.IO.File]::OpenRead($pathToFile)
+        $fileName = [System.IO.Path]::GetFileName($pathToFile)
+
+        if ($fileExtension -eq ".csv") {
+                $content = New-Object System.Net.Http.StreamContent($fileStream)
+                $content.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse("text/csv")
+                Write-Host "Uploading CSV file" -ForegroundColor Green
+        }
+        elseif ($fileExtension -eq ".json") {
+                $content = New-Object System.Net.Http.StreamContent($fileStream)
+                $content.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse("application/json")
+                Write-Host "Uploading JSON file" -ForegroundColor Green
+        }
+        else {
+                $content = New-Object System.Net.Http.MultipartFormDataContent
+                $fileContent = New-Object System.Net.Http.StreamContent($fileStream)
+                $content.Add($fileContent, "info", $fileName)
+                Write-Host "Uploading ZIP file" -ForegroundColor Green
+        }
 
 
         $result = $client.PostAsync($DescriptiveDataUploadEndPoint, $content).Result;
